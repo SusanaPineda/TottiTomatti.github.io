@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>P1</title>
+    <title>Carousel Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,13 +17,9 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
-
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
-
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -31,50 +27,68 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- Latest compiled and minified CSS -->
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
 
+
+
   <body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+  <!-- NAVBAR================================================== 
+    <div class="navbar-wrapper">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <!-- Carousel
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Project name</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+      </div>
+    </div>-->
+
+
+    <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
@@ -84,27 +98,51 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
       </ol>
       <div class="carousel-inner" role="listbox">
+      <!-- PRIMERA PANTALLA imagen de "the GodFarmer"-->
         <div class="item active">
-          <img class="first-slide" src="https://c24e867c169a525707e0-bfbd62e61283d807ee2359a795242ecb.ssl.cf3.rackcdn.com/imagenes/gato/etapas-clave-de-su-vida/gatitos/nuevo-gatito-en-casa/gatito-durmiendo-en-cama.jpg" alt="First slide">
-          <div class="container">
-            
-          </div>
-        </div>
-        <div class="item">
-          <img class="second-slide" src="https://s6.favim.com/orig/65/animal-animals-cat-cute-Favim.com-602611.jpg" alt="Second slide">
+          <img class="first-slide" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\blue-sky.jpg">
           <div class="container">
             <div class="carousel-caption">
+              <h1>The GodFarmer.</h1>
+              <p>Ayuda a Tomas a salvar a sus hijos de la furia de Dios.</p>
+              <!-- boton a jugar "the Godfarmer" -->
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Jugar</a></p>
             </div>
           </div>
         </div>
+      <!-- SEGUNDA PANTALLA imagen de Totti Tomatti-->
         <div class="item">
-          <img class="third-slide" src="https://t2.ea.ltmcdn.com/es/images/3/1/4/img_cuando_se_pueden_separar_los_gatitos_de_su_madre_22413_600.jpg" alt="Third slide">
+          <img class="second-slide" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\Fuego.jpg">
           <div class="container">
             <div class="carousel-caption">
+              <h1>Totti Tomatti.</h1>
+              <p>¡Un fuego terrible se extiende por la cocina! ¡Intenta apagarlo antes de que sea demasiado tarde o de que estes demasiado borracho!.</p>
+              <!-- boton a video/jugar Totti Tomatti -->
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Jugar</a></p>
+            </div>
+          </div>
+        </div>
+      <!--TERCERA PANTALLA contacto-->
+        <div class="item">
+          <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Donde encontrarnos.</h1>
+              <!--<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>-->
+              <!-- boton a twitter -->
+              <a href="https://twitter.com"><img src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\twitter2.png" alt="image" class="img-rounded"></a>
+              <!-- boton a facebook -->
+
+              <a href="https://facebook.com"><img src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\Facebook2.png" alt="image" class="img-rounded"></a>
+              <!--boton a instagram -->
+              <a href="https://instagram.com"><img src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\instagram.png" alt="image" class="img-rounded"></a>
+
             </div>
           </div>
         </div>
       </div>
+
+      <!--CONTROLES DEL CARRUSEL -->
       <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
@@ -114,19 +152,108 @@
         <span class="sr-only">Next</span>
       </a>
     </div><!-- /.carousel -->
-    </div>
 
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVFEgzdmJP3NsSmzsqw6kwytAvtFZFafXE6nE1uwMkTLLJKJG" class="rounded float-left" alt="2">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPzjrc7NrEB_chtRKoM97Mr7qfT9B0zfex2vGkTBk2qsVJnm_xAQ" class="rounded float-left" alt="2">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEu9L5w9df0BVto4K_mwCuLrFZMKqTVEpnO_yXjhMM0KxVFz27" class="rounded float-left" alt="2">
-    <img src="data:image/jpeg;base64,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" class="rounded float-left" alt="2">
 
-      <hr>
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
 
+    <div class="container marketing">
+
+      <!-- 5 COLUMNAS CON LOS INTEGRANTES DEL EQUIPO -->
+      <div class="row">
+      <!-- PRIMERA COLUMNA - 1ER INTEGRAMNTE -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\pimiento.png" alt="Generic placeholder image" width="140" height="140">
+          <h2>Jorge</h2>
+          <p>"..."</p>
+          <p><a class="btn btn-default" href="#" role="button"> Contacto </a></p>
+        </div>
+
+      <!-- SEGUNDA COLUMNA - 2º INTEGRANTE -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\tomato.png" alt="Generic placeholder image" width="140" height="140">
+          <h2>Iván</h2>
+          <p>"..."</p>
+          <p><a class="btn btn-default" href="#" role="button"> Contacto </a></p>
+        </div>
+
+      <!-- TERCERA COLUMNA - 3ER INTEGRANTE -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\patata.png" alt="Generic placeholder image" width="140" height="140">
+          <h2>Álvaro</h2>
+          <p>"..."</p>
+          <p><a class="btn btn-default" href="#" role="button"> Contacto </a></p>
+        </div>
+
+      <!-- CUARTA COLUMNA - 4º INTEGRANTE -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\brocoli.png" alt="Generic placeholder image" width="140" height="140">
+          <h2>Agustín</h2>
+          <p>"..."</p>
+          <p><a class="btn btn-default" href="#" role="button"> Contacto </a></p>
+        </div>
+
+      <!-- QUINTA COLUMNA - 5º INTEGRANTE -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="C:\Users\tusip\Google Drive\4º ddvj-igc\1er cuatrimestre\web\P2\berenjena.png" alt="Generic placeholder image" width="140" height="140">
+          <h2>Susana</h2>
+          <p>"..."</p>
+          <p><a class="btn btn-default" href="#" role="button"> Contacto </a></p>
+        </div>
+      </div><!-- FIN DE LAS COLUMNAS -->
+
+
+      <!-- START THE FEATURETTES 
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+      <!-- FOOTER -->
       <footer>
-        <p>&copy; 2016 Company, Inc.</p>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
-    </div> <!-- /container -->
+
+    </div><!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript
@@ -135,6 +262,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="../../assets/js/vendor/holder.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
