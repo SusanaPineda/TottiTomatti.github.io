@@ -62,7 +62,12 @@ body {
   height: 500px;
 }
 
-
+.img-rounded{
+  border-radius: 6px;
+  width: 10%;
+  height: 10%;
+  margin: 2%;
+}
 /* MARKETING CONTENT
 -------------------------------------------------- */
 
