@@ -10,7 +10,7 @@ body {
 
 @font-face {
     font-family: myFont;
-    src: url(fuente2.ttf);
+    src: url(fuente2.TTF);
 }
 
 @font-face {
