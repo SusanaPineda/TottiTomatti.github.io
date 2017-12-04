@@ -32,10 +32,6 @@ body {
       border-radius: 6px;
       width: 100%;
       height: 100%;
-      -webkit-transform: rotate(90deg);
-      moz-transform: rotate(90deg);
-      rotation: 90deg;
-      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
       
     }
   .game_container #canvas{
@@ -90,10 +86,6 @@ body {
       border-radius: 6px;
       width: 80%;
       height: 100%;
-      -webkit-transform: rotate(0deg);
-      -moz-transform: rotate(0deg);
-      rotation: 0deg;
-      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
       
     }
   .game_container #canvas{
