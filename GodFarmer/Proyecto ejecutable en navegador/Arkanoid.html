@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Practica 3.- Arkanoid - Álvaro Gómez (71358049C)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      canvas {
+        margin: 0px;
+        padding: 0px;
+		border:1px solid #000000;
+		background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+  <body>
+    <div>
+      <canvas id="canvas" width="700" height="900"></canvas>
+	</div>
+	<div>
+	</div>
+	<!-- Se añaden los archivos de sonido -->
+	<audio id="lostBall">
+		<source src="LostBall.wav"></source>
+	</audio>
+	<audio id="brickBounce">
+		<source src="reboteladrillo.wav"></source>
+	</audio>
+	<audio id="levelStart">
+		<source src="levelstart.wav"></source>
+	</audio>
+	<audio id="levelFinished">
+		<source src="levelfinished.wav"></source>
+	</audio>
+	<audio id="reboteBarrita">
+		<source src="rebotebarrita.wav"></source>
+	</audio>
+	
+    <script type="text/javascript">
+      
+		//Contexto y canvas
+		var context = document.getElementById('canvas').getContext('2d');
+		var canvas = document.getElementById('canvas');
+		var parrafo = document.getElementById('parrafo');
+		
+		//Oculta el cursor
+		canvas.style.cursor = "none";
+		
+		//Variables tamaño canvas
+		var maxX = canvas.width;
+		var maxY = canvas.height;
+		
+		//Audios
+		var lostBall = document.getElementById('lostBall');
+		var levelStart = document.getElementById('levelStart');
+		var brickBounce= document.getElementById('brickBounce');
+		var levelFinished = document.getElementById('levelFinished');
+		var reboteBarrita = document.getElementById('reboteBarrita');
+		var volume = 0.3;
+		
+		//Fondo
+		var bckGrSpr = new Image();
+		bckGrSpr.src = "fondolavita.png";
+
+		//Se crean los objetos y se inicializan los arrays que determinan los niveles
+		var ball =  new Ball(350,700);
+		var player =  new Player(350,800);
+		var gUI = new GUI();
+		powerUps = new Array(5);
+		
+		//Array de ladrillos
+		bricks2 = new Array(8);		
+		for (i=0;i<8;i++){
+			bricks2[i] = new Array(6);
+		}
+		
+		//Arrays de diseño de nivel
+		level2 = new Array(6);	
+		for (i=0;i<6;i++){
+			level2[i] = new Array(8);
+		}
+		
+		level3 = new Array(6);		
+		for (i=0;i<6;i++){
+			level3[i] = new Array(8);
+		}
+		
+		level4 = new Array(6);		
+		for (i=0;i<6;i++){
+			level4[i] = new Array(8);
+		}
+		
+		//Creacion del objeto control
+		var control =  new Control(player,ball,bricks2,powerUps);
+
+		control.initWorld();
+		
+		
+		//Objeto jugador Barra.
+		function Player(px,py)
+		{
+			
+			canvas.addEventListener("mousemove", update, true);	
+			
+			//Atributos
+			var x = px;
+			var y = py;
+			var lifes = 3;
+			var powUp = false;
+			
+			//Sprites
+			var playerSpr = new Image();
+			playerSpr.src = "barrita.png";
+			
+			//Getters y Setters
+			this.getX = function()
+			{
+				return x;
+			}
+			this.getY = function()
+			{
+				return y;
+			}
+			
+			this.getLifes = function()
+			{
+				return lifes;
+			}
+			
+			this.setLifes = function(l)
+			{
+				lifes = l;
+			}
+			
+			this.getW = function()
+			{
+				return playerSpr.width;
+			}
+			this.getH = function()
+			{
+				return playerSpr.height;
+			}
+			
+			
+			//Devuelve al estado por defecto del jugador
+			function noPowerUp(){
+				playerSpr.src = "barrita.png";
+			}
+			
+			//Si el jugador tiene un power up se cambia el sprite de barra o la velocidad de la bola
+			//(1) rojo --> barra mas grande
+			//(2) amarillo --> barra mas pequeña
+			//(3) morado --> pelota mas rápida
+			//(4) azúl --> pelota mas lenta
+			this.powerUp = function(pU)
+			{
+				if (pU == 1){
+					playerSpr.src = "barritaL.png";
+					setTimeout(noPowerUp, 20000);
+				}else if (pU == 2){
+					playerSpr.src = "barritaP.png";
+					setTimeout(noPowerUp, 20000);
+				}else if (pU == 3){
+					ball.upSpeed(2);
+					setTimeout(ball.noPowerUp, 20000);
+				}else if (pU == 4){
+					ball.downSpeed(2);
+					setTimeout(ball.noPowerUp, 20000);
+				}
+			}
+			
+			//Dibuja el sprite del jugador
+			this.draw = function(context)
+			{	
+				//Mantiene el centro de la barra
+				var v = x - playerSpr.width/2;
+				var z = y - playerSpr.height/2;
+				
+				context.drawImage(playerSpr,v,z);
+			}
+			
+			//Controla el movimiento de la barra
+			function update(e)
+			{
+				if (lifes > 0){	
+					x = e.pageX;
+					x = x.clamp(playerSpr.width/2 + 10, maxX - playerSpr.width/2 -10);
+				}
+			}
+			
+		}
+		
+		//Gestiona los eventos relacionados con los ladrillos
+		function Brick(px,py)
+		{
+			//Atributos
+			var x = px;
+			var y = py;
+			var powerUp;
+			var width = 50;
+			var height = 30;
+			var rand = Math.floor((Math.random() * 4) + 1);
+			
+			//Sprites
+			var brickSpr = new Image();
+			if (rand == 1){
+				brickSpr.src = "ladrillito.png";
+			}else if (rand == 2){
+				brickSpr.src = "ladrillito2.png";
+			}else if (rand == 3){
+				brickSpr.src = "ladrillito3.png";
+			}else if (rand == 4){
+				brickSpr.src = "ladrillito4.png";
+			}
+			
+			
+			//Getters y setters
+			this.getX = function()
+			{
+				return x;
+			}
+			this.getY = function()
+			{
+				return y;
+			}
+			
+			this.getW = function()
+			{
+				return brickSpr.width;
+			}
+			this.getH = function()
+			{
+				return brickSpr.height;
+			}
+			
+			//Dibuja el sprite de pelota
+			this.draw = function(context)
+			{	
+				var v = x - brickSpr.width/2;
+				var z = y - brickSpr.height/2;
+			
+				context.drawImage(brickSpr,v,z);
+			}
+			
+		} 
+		
+		//Gestiona los eventos relacionados con los power ups
+		function PowerUp(px,py)
+		{
+			var x = px;
+			var y = py;
+			var type = Math.floor((Math.random() * 4) + 1);
+			var speed = 3;
+			
+			//Se determina el sprite a usar en función del tipo de power up
+			var powerSpr = new Image();
+			if (type == 1){
+				powerSpr.src = "power1.png";
+			}else if (type == 2){
+				powerSpr.src = "power2.png";
+			}else if (type == 3){
+				powerSpr.src = "power3.png";
+			}else if (type == 4){
+				powerSpr.src = "power4.png";
+			}
+			
+			//Setters y getters
+			this.getType = function()
+			{
+				return type;
+			}
+			
+			this.getX = function()
+			{
+				return x;
+			}
+			this.getY = function()
+			{
+				return y;
+			}
+			
+			//Anima la caida del sprite
+			this.update = function()
+			{
+				y += speed;
+			}
+			
+			//Dibuja el sprite en pantalla
+			this.draw = function(context)
+			{	
+		        var v = x - powerSpr.width/2;
+				var z = y - powerSpr.height/2;
+				
+				context.drawImage(powerSpr,v,z);
+			}
+			
+		}
+		
+		//Gestiona los eventos relacionados con la pelota
+		function Ball(px,py)
+		{
+			//Atributos
+			var x = px;
+			var y = py;
+			var dir = [-1,-1];
+			var speed = 5;
+			var play = true;
+			var aux = true;
+			var playb = true;
+			var playm = true;
+			
+			//Variables margenes
+				var margin = 10;
+				var xEdge = [1,0];
+				var yEdge = [0,1];
+			
+			//Variables Sprite
+			var ballSpr = new Image();
+			ballSpr.src = "pelota.png";
+			
+			//Getters, setters y reset
+			this.getPos = function()
+			{
+				return [x,y];
+			}
+			
+			this.setPos = function(px,py)
+			{
+				x = px;
+				y = py;
+			}
+			
+			function resetPlay()
+			{
+				play = true;
+			}
+			
+			function resetAux()
+			{
+				aux = true;
+			}
+			
+			this.setDir = function(x, y)
+			{
+				dir = [x,y];
+			}
+			
+			this.resetAux = function()
+			{
+				aux = true;
+			}
+			
+			this.resetPlay = function()
+			{
+				Play = true;
+			}
+			
+			this.resetPos = function()
+			{
+				x = 350;
+				y = 700;
+				dir = [-1,-1];
+			}
+			
+			this.setSpeed = function(s)
+			{
+				speed = s;
+			}
+			
+			
+			//Aumenta la velocidad
+			this.upSpeed = function(spd)
+			{
+				speed += spd;
+			}
+			
+			//Disminuye la velocidad
+			this.downSpeed = function(spd)
+			{
+				speed -= spd;
+				if (speed <= 1){
+					speed = 1;
+				}
+			}
+			
+			//Si el jugador no tiene power up activo que modifique la velocidad 
+			//se vuelve a la velocidad por defecto
+			this.noPowerUp = function()
+			{
+				speed = 5;
+			}
+			
+			//Actualiza la posición de la pelota
+			this.update = function()
+			{
+				
+				x += dir[0]*speed;
+				y += dir[1]*speed;
+				
+				bounce(bricks2, player);
+			}
+			
+			//Dibuja la pelota en pantalla
+			this.draw = function(context)
+			{	
+				var v = x - ballSpr.width/2;
+				var z = y - ballSpr.height/2;
+				
+				context.drawImage(ballSpr,v,z);
+			}
+			
+			
+			//Calcula las colisiones contra los objetos ladrillo, jugador y los limites
+			function bounce(bricks2,player)
+			{
+				var intersectW = -1;
+				var intersectH = -1;
+				
+				
+				//variables pelota
+				var radius = ballSpr.height/2;
+				var top = y-radius;
+				var bot = y+radius;
+				var left = x-radius;
+				var right = x+radius;
+				
+				//Variables barra
+				var topP =  player.getY()-player.getH()/2;
+				var botP =  player.getY()+player.getH()/2;
+				var rightP = player.getX()+player.getW()/2;
+				var leftP = player.getX()-player.getW()/2;
+				
+				
+				
+				
+				
+				//Colision con ladrillos
+				//Detecta por donde sucede la colision mediante la compracion del ancho y el alto
+				//del rectagulo de interseccion.
+				//---Si el ancho es mayor que el alto, rebota por arriba o abajo
+				//---Si el alto es mayor que el ancho, rebota por izquierda o derecha
+				
+				//Primero centro, luego lados y por ultimo esquinas
+				//Esquinas desde arriba izquierda counter clockwise
+				// 1 -  - 2
+				// 4 -  - 3
+				for (i=0; i<8; i++){
+					for (z=0; z<6; z++){
+						if (bricks2[i][z] != null){
+							var topB = bricks2[i][z].getY()-bricks2[i][z].getH()/2;
+							var botB = bricks2[i][z].getY()+bricks2[i][z].getH()/2;
+							var rightB = bricks2[i][z].getX()+bricks2[i][z].getW()/2;
+							var leftB = bricks2[i][z].getX()-bricks2[i][z].getW()/2;
+							
+							var topLeft = itsInside(bricks2[i][z],left,top);
+							var topRight = itsInside(bricks2[i][z],right,top);
+							var botLeft = itsInside(bricks2[i][z],left,bot);
+							var botRight = itsInside(bricks2[i][z],right,bot);
+							if (botRight && botLeft){
+								dir = reflect(dir,yEdge);
+							}else if (topRight && topLeft){
+								dir = reflect(dir,yEdge);
+							}else if (topRight && botRight){
+								dir = reflect(dir,xEdge);
+							}else if (topLeft && botLeft){
+								dir = reflect(dir,xEdge);
+							}else if (botRight){
+								intersectW = intersectW.abs(leftB-right);
+								intersectH = intersectH.abs(bot-topB);
+							}else if (botLeft){
+								intersectW = intersectW.abs(rightB-left);
+								intersectH = intersectH.abs(bot-topB);
+							}else if (topLeft){
+								intersectW = intersectW.abs(leftB-right);
+								intersectH = intersectH.abs(botB-top);
+							}else if (topRight){
+								intersectW = intersectW.abs(rightB-left);
+								intersectH = intersectH.abs(botB-top);
+							}
+						
+							if (intersectH != -1 && intersectW != -1){
+								if (intersectH > intersectW){
+									dir = reflect(dir,xEdge);
+								}else if (intersectH < intersectW){
+									dir = reflect(dir,yEdge);
+								}else{
+									dir[0] = -dir[0];
+									dir[1] = -dir[1];
+								}
+							}
+							
+							if (topLeft || topRight || botLeft || botRight){
+								var bx = bricks2[i][z].getX();
+								var by = bricks2[i][z].getY();
+								delete bricks2[i][z];
+								control.addScore(25);
+								control.spawnPO(powerUps,bx,by);
+								if(play){
+									brickBounce.volume = volume;
+									brickBounce.pause();
+									brickBounce.currentTime = 0
+									brickBounce.play();
+									play = false;
+									setTimeout(resetPlay, 100);
+								}
+								
+						}
+						}
+					}
+				}
+				
+				intersectW = 0;
+				intersectH = 0;
+				
+				//Colision con barra
+				//Detecta por donde sucede la colision mediante la compracion del ancho y el alto
+				//del rectagulo de interseccion.
+				//---Si el ancho es mayor que el alto, rebota por arriba o abajo
+				//---Si el alto es mayor que el ancho, rebota por izquierda o derecha
+				
+				//Primero centro, luego lados y por ultimo esquinas
+				//Esquinas desde arriba izquierda counter clockwise
+				// 1 -  - 2
+				// 4 -  - 3
+				topLeft = itsInside(player,left,top);
+				topRight = itsInside(player,right,top);
+				botLeft = itsInside(player,left,bot);
+				botRight = itsInside(player,right,bot);
+
+				if (botRight && botLeft){
+					dir = reflect(dir,yEdge);
+				}else if (topRight && topLeft){
+					dir = reflect(dir,yEdge);
+				}else if (topRight && botRight){
+					dir = reflect(dir,xEdge);
+				}else if (topLeft && botLeft){
+					dir = reflect(dir,xEdge);
+				}else if (botRight){
+					intersectW = intersectW.abs(leftP-right);
+					intersectH = intersectH.abs(bot-topP);
+				}else if (botLeft){
+					intersectW = intersectW.abs(rightP-left);
+					intersectH = intersectH.abs(bot-topP);
+				}else if (topLeft){
+					intersectW = intersectW.abs(leftP-right);
+					intersectH = intersectH.abs(botP-top);
+				}else if (topRight){
+					intersectW = intersectW.abs(rightP-left);
+					intersectH = intersectH.abs(botP-top);
+				}
+				
+				if (intersectH != 0 && intersectW != 0){
+					if (intersectH > intersectW){
+						dir = reflect(dir,xEdge);
+					}else if (intersectH < intersectW){
+						dir = reflect(dir,yEdge);
+					}else{
+						dir[0] = -dir[0];
+						dir[1] = -dir[1];
+					}
+				}
+				
+				if (topLeft || topRight || botLeft || botRight){
+					if(playb){
+						reboteBarrita.volume = volume;
+						reboteBarrita.pause();
+						reboteBarrita.currentTime = 0
+						reboteBarrita.play();
+						playb = false;
+						setTimeout(playb = true, 2000);
+					}		
+				}
+				
+				//Colision con margenes
+				if (right >= maxX-margin){
+					dir = reflect(dir,xEdge);
+					if(playm){
+						brickBounce.volume = volume;
+						brickBounce.pause();
+						brickBounce.currentTime = 0
+						brickBounce.play();
+						playm = false;
+						setTimeout(playm = true, 100);
+					}
+				}else if (left <= margin){
+					dir = reflect(dir,xEdge);
+					if(playm){
+						brickBounce.volume = volume;
+						brickBounce.pause();
+						brickBounce.currentTime = 0
+						brickBounce.play();
+						playm = false;
+						setTimeout(playm = true, 100);
+					}
+				}else if (top <= margin){
+					dir = reflect(dir,yEdge);
+					if(playm){
+						brickBounce.volume = volume;
+						brickBounce.pause();
+						brickBounce.currentTime = 0
+						brickBounce.play();
+						playm = false;
+						setTimeout(playm = true, 100);
+					}
+				}else if (bot >= maxY-margin){
+					
+					if (aux){
+						l = player.getLifes();
+						l--;
+						aux = false
+						player.setLifes(l);
+						setTimeout(resetAux, 3000);
+					}
+					
+					if(play){
+						lostBall.volume = volume;
+						lostBall.pause();
+						lostBall.currentTime = 0
+						lostBall.play();
+						play = false;
+						setTimeout(resetPlay, 2000);
+					}
+					setTimeout(ball.resetPos, 2000);
+					
+				}
+			}
+		}
+		
+		//Controla los eventos relacionados con la interfaz del jugador
+		function GUI()
+		{
+			var color = "#ffcc99";
+			
+			//Muestra por pantalla la puntuación del jugador
+			this.drawScore = function(px,py,score)
+			{
+				//Si está disponible la fuente de nuestra elección se usa esa, si no una genérica (Arial)
+				if (isFontAvailable('NI7SEG')){
+					context.fillStyle=color;
+					context.font="18px NI7SEG";
+					context.fillText("Score:" + score,px,py);
+				}else{
+					context.fillStyle=color;
+					context.font="18px Arial";
+					context.fillText("Score:" + score,px,py);
+				}						
+			}
+			
+			//Muestra por pantalla las vidas que le quedan al jugador
+			this.drawLifes = function(px,py,lifes)
+			{
+				if (isFontAvailable('NI7SEG')){
+					context.fillStyle=color;
+					context.font="18px NI7SEG";
+					context.fillText("Lifes:" + lifes,px,py);
+				}else{
+					context.fillStyle=color;
+					context.font="18px Arial";
+					context.fillText("Lifes:" + lifes,px,py);
+				}						
+			}
+			
+			//Muestra por pantalla las vidas que le quedan al jugador
+			this.drawLevel = function(px,py,level)
+			{
+				if (isFontAvailable('NI7SEG')){
+					context.fillStyle=color;
+					context.font="18px NI7SEG";
+					context.fillText("Level:" + level,px,py);
+				}else{
+					context.fillStyle=color;
+					context.font="18px Arial";
+					context.fillText("Level:" + level,px,py);
+				}						
+			}
+			
+			//Muestra por pantalla el score del jugador y las instrucciones para empezar nueva partida
+			this.drawGameOver = function(px,py,score)
+			{
+				if (isFontAvailable('NI7SEG')){
+					context.fillStyle=color;
+					context.font="35px NI7SEG";
+					context.fillText("GAME OVER!",px,py);
+					context.font="20px NI7SEG";
+					context.fillText("Score: "+score,px+52,py+50);
+					context.font="15px NI7SEG";
+					context.fillText("Presiona el boton de click izquierdo para reiniciar.",px-110,py+100);
+				}else{
+					context.fillStyle=color;
+					context.font="35px Arial";
+					context.fillText("GAME OVER!",px,py);
+					context.font="20px Arial";
+					context.fillText("Score: "+score,px+65,py+50);
+					context.font="15px Arial";
+					context.fillText("Presiona el boton de click izquierdo para reiniciar.",px-45,py+100);
+				}						
+			}
+		}
+		
+		function Control(player,ball,bricks2,powerUps)
+		{
+			//Habilitamos un temporizador que se active 30 veces por segundo
+			var temporizador = setInterval(updateWorld, 1000/60);
+			//Habilitamos un temporizador que se activará a la velocidad del monitor
+			requestAnimationFrame(updateScene);
+			
+			canvas.addEventListener("mousedown", mouseManage, false);
+			
+			//Atributos
+			var play = true;
+			var score = 0;
+			var level = 1;
+			
+			//Creacion de nivel
+			//Si se desea se pueden modificar los valores para cambiar los niveles
+			//--0: no hay ladrillo
+			//--1: hay ladrillo
+			level2[0] = [1,1,1,1,1,1,1,1];
+			level2[1] = [1,1,1,1,1,1,0,0];
+			level2[2] = [1,1,1,1,0,0,0,0];
+			level2[3] = [1,1,0,0,0,0,0,0];
+			level2[4] = [0,0,0,0,0,0,0,0];
+			level2[5] = [0,0,0,0,0,0,0,0];
+			
+			level3[0] = [1,0,1,1,1,1,0,1];
+			level3[1] = [1,0,1,0,0,1,0,1];
+			level3[2] = [1,1,1,1,1,1,1,1];
+			level3[3] = [1,0,1,0,0,1,0,1];
+			level3[4] = [1,0,1,1,1,1,0,1];
+			level3[5] = [0,0,0,0,0,0,0,0];
+			
+			level4[0] = [1,1,1,1,1,1,1,1];
+			level4[1] = [1,1,1,1,1,1,1,1];
+			level4[2] = [0,0,0,0,0,0,0,0];
+			level4[3] = [0,0,0,0,0,0,0,0];
+			level4[4] = [1,1,1,1,1,1,1,1];
+			level4[5] = [1,1,1,1,1,1,1,1];
+			
+			level2 = transpose(level2);
+			level3 = transpose(level3);
+			level4 = transpose(level4);
+			
+			//Incrementa el score
+			this.addScore = function(s)
+			{
+				score += s;
+			}
+			
+			//Transpone la matriz y la devuelve
+			function transpose(array)
+			{
+				var aux = new Array(8);		
+				for (i=0;i<8;i++){
+					aux[i] = new Array(6);
+				}
+				
+				
+				for (i=0;i<8;i++){
+					for(z=0;z<6;z++){
+						aux[i][z] = array[z][i];
+					}
+				}
+				
+				return aux;
+			}
+			
+			//Inicializa el mundo
+			this.initWorld = function()
+			{
+				
+				var ix = 61;
+				var iy = 100;
+				
+				player.setLifes(3);
+				score = 0;
+				
+				if (level ==1){
+					for (i=0;i<8;i++){
+						iy = 100;
+						for(z=0;z<6;z++){
+							bricks2[i][z] = new Brick(ix,iy);
+							iy += 50;
+						}
+						ix += 82;
+					}
+				}
+				
+				
+				
+				levelStart.volume = volume;
+				levelStart.pause();
+				levelStart.currentTime = 0
+				levelStart.play();
+					
+			}
+			
+			//Determina si la matriz bricks esta vacia
+			function itsEmpty()
+			{
+				for (i=0;i<8;i++){
+					for(z=0;z<6;z++){
+						if (bricks2[i][z] != null){
+							return false;
+						}
+					}							
+				}
+				return true;
+			}
+			
+			//Detecta el cambio de nivel y inicializa los ladrillos de este
+			function nextLevel()
+			{					
+				if(itsEmpty()){
+					level++;
+					ball.setPos(350,700);
+					ball.setDir(-1, -1);
+					if (level == 2){
+						for (i=0;i<8;i++){
+							ix = 61 + 82*i;
+							for(z=0;z<6;z++){
+								iy = 100 + 50*z;
+								if (level2[i][z] == 1){
+									bricks2[i][z] = new Brick(ix,iy);
+								}
+							}
+							
+						}	
+					}else if (level == 3)
+					{
+						for (i=0;i<8;i++){
+							ix = 61 + 82*i;
+							for(z=0;z<6;z++){
+								iy = 100 + 50*z;
+								if (level3[i][z] == 1){
+									bricks2[i][z] = new Brick(ix,iy);
+								}
+							}
+							
+						}
+					}else if (level == 4)
+					{
+						for (i=0;i<8;i++){
+							ix = 61 + 82*i;
+							for(z=0;z<6;z++){
+								iy = 100 + 50*z;
+								if (level4[i][z] == 1){
+									bricks2[i][z] = new Brick(ix,iy);
+								}
+							}
+							
+						}
+					}else if(level > 4)
+					{
+						gameOver();
+					}
+				}
+			}
+			
+			//Maneja el raton
+			function mouseManage(e)
+			{
+				
+				if (e.type == "mousedown" && player.getLifes() <=0){
+					restart();
+				}
+			}
+			
+			//Reinicia el mundo tras un GameOver
+			function restart()
+			{
+				
+				var ix = 61;
+				var iy = 100;
+				
+				ball.setSpeed(5);
+				ball.resetAux();
+				ball.resetPlay();
+				player.setLifes(3);
+				score = 0;
+				
+				for (i=0;i<8;i++){
+					iy = 100;
+					for(z=0;z<6;z++){
+						bricks2[i][z] = new Brick(ix,iy);
+						iy += 50;
+					}
+					ix += 82;
+				}
+				
+				levelStart.volume = volume;
+				levelStart.pause();
+				levelStart.currentTime = 0
+				levelStart.play();
+			}
+			
+			//Establece una pausa
+			function gameOver()
+			{
+				
+				
+				if (player.getLifes() <= 0){
+					ball.setSpeed(0);
+					if(play){
+						levelFinished.volume = volume;
+						levelFinished.pause();
+						levelFinished.currentTime = 0
+						levelFinished.play();
+						play = false;
+					}
+				}
+			}
+			
+			//Dibuja la escena cada frame
+			function drawScene(context)
+			{
+				context.clearRect(0, 0, maxX, maxY);
+				context.drawImage(bckGrSpr,0,0);
+				ball.draw(context);
+				for (i=0; i<8; i++){
+					for (z=0; z<6; z++){
+						if (bricks2[i][z] !=null){
+							bricks2[i][z].draw(context);
+						}
+					}
+				}
+				for (i = 0 ; i < 3; i++){
+					if (powerUps[i] !=null){
+						powerUps[i].draw(context);
+					}
+				}
+				player.draw(context);
+				gUI.drawScore(10,30,score);
+				gUI.drawLifes(600,30,player.getLifes());
+				gUI.drawLevel(325,30,level);
+				if (player.getLifes() <= 0 || level > 4){
+					gUI.drawGameOver(250,450,score);
+				}
+					
+			}
+			
+			//Actualiza la escena
+			function updateScene()
+			{
+				gameOver();
+				drawScene(context);
+				requestAnimationFrame(updateScene);
+			}
+			
+			//Spawnea un power Up
+			this.spawnPO = function(pO,px,py)
+			{
+				if (Math.floor((Math.random() * 100) + 1) < 10){
+					for (i=0; i<pO.length; i++){
+						if (pO[i] == null){
+							pO[i] = new PowerUp(px,py);
+							i = pO.length;
+						}
+					}
+				}
+				
+			}
+			
+			//Destruye un powerup
+			function destroyPO(pO)
+			{
+				for (i=0; i<pO.length; i++){
+					if (pO[i] != null){
+						if (itsInside(player,pO[i].getX(),pO[i].getY())){
+							player.powerUp(pO[i].getType());
+							control.addScore(100);
+							delete pO[i];
+						}else if (pO[i].getY() >= maxY){
+							
+							delete pO[i];
+						}
+					}
+				}
+				
+			}
+			
+			//Actualiza el mundo
+			function updateWorld()
+			{
+				ball.update();
+				for (i = 0 ; i < 3; i++){
+					if (powerUps[i] !=null){
+						powerUps[i].update();
+					}
+				}
+				destroyPO(powerUps);
+				nextLevel();
+			}
+		}
+		
+		//Limita el valor de una variable entre un intervalo dado
+		Number.prototype.clamp = function(min, max) 
+		{
+			return Math.min(Math.max(this, min), max);
+		};
+		
+		//Devuelve el valor absoluto de una variable
+		Number.prototype.abs = function(n) 
+		{
+			if (n < 0){			
+				return -n;
+			}else{
+				return n;
+			}
+		};
+		
+		//Invierte un vector en un eje dado (solo eje X o eje Y)
+		function reflect(vec,edge) 
+		{
+			if (edge[0] == 1 && edge[1] == 0){
+				vec[0] = -vec[0];
+			}else if (edge[0] == 0 && edge[1] == 1){
+				vec[1] = -vec[1];
+			}
+			return vec;
+		}
+		
+		//Determina si un punto esta dentro de un objeto
+		function itsInside(obj,px,py)
+		{
+			var semiWidth = obj.getW()/2;
+			var semiHeight = obj.getH()/2;
+			//Variables barra
+			var topO =  obj.getY()-semiHeight;
+			var botO =  obj.getY()+semiHeight;
+			var rightO = obj.getX()+semiWidth;
+			var leftO = obj.getX()-semiWidth;
+			
+			if (px > leftO && px < rightO && py < botO && py > topO){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}
+		
+		
+		/**
+		 * Checks if a font is available to be used on a web page.
+		 *
+		 * @param {String} fontName The name of the font to check
+		 * @return {Boolean}
+		 * @license MIT
+		 * @copyright Sam Clarke 2013
+		 * @author Sam Clarke <sam@samclarke.com>
+		*/
+		(function (document) {
+			var calculateWidth, monoWidth, serifWidth, sansWidth, width;
+			var body          = document.body;
+			var container     = document.createElement('div');
+			var containerCss  = [
+				'position:absolute',
+				'width:auto',
+				'font-size:128px',
+				'left:-99999px'
+			];
+
+			// Create a span element to contain the test text.
+			// Use innerHTML instead of createElement as it's smaller
+			container.innerHTML = '<span style="' + containerCss.join(' !important;') + '">' +
+				Array(100).join('wi') +
+			'</span>';
+			container = container.firstChild;
+
+			calculateWidth = function (fontFamily) {
+				container.style.fontFamily = fontFamily;
+
+				body.appendChild(container);
+				width = container.clientWidth;
+				body.removeChild(container);
+
+				return width;
+			};
+
+			// Pre calculate the widths of monospace, serif & sans-serif
+			// to improve performance.
+			monoWidth  = calculateWidth('monospace');
+			serifWidth = calculateWidth('serif');
+			sansWidth  = calculateWidth('sans-serif');
+
+			window.isFontAvailable = function (fontName) {
+				return monoWidth !== calculateWidth(fontName + ',monospace') ||
+					sansWidth !== calculateWidth(fontName + ',sans-serif') ||
+					serifWidth !== calculateWidth(fontName + ',serif');
+			};
+		})(document);
+		
+		
+		</script>
+  </body>
+</html>  
