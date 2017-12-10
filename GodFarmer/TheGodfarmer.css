@@ -104,7 +104,7 @@ body {
  @media(min-height:720px){
     body{
       background-image: url(infierno.png);
-      background-position: 0px 120px;
+      background-position: 0px 0px;
       background-size: 100% 100%;
       background-repeat: no-repeat;
     }
