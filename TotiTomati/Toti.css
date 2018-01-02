@@ -82,47 +82,4 @@ body {
 
  }
 
- @media(min-height: 800px) {
-
-  body{
-    padding-top: 0px;
-
-      background-image: url("fondo.png");
-      background-position: 0% 0%;
-      
-      background-repeat: repeat;
-  }
-  /*escondemos la informacion personal*/
- .container_marketing{
-  display: none;
-  }
-  .game_title{
-  	margin-top: 1%;
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
-
-  }
-  .game_title #tit{
-    display: initial;
-    height: 100%;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  #gameContainer{
-  	  
-  	  left: 37%;
-  	  position: relative;
-   	  width: 720px;
-   	  height: 1280px;
-      border-radius: 6px;
-      border-color: black;
-      border-width: 10px;
-      /**/
-
-      
-      
-    }
-
- }
+ 
