@@ -35,7 +35,7 @@ body {
       
     }
 
-/*CONFIGURACION PARA PORTATIL/PANTALLA MEDIANA*/
+/*CONFIGURACION PARA PORTATIL/PANTALLA MEDIANA
 
 @media(min-width: 768px) {
 
@@ -47,7 +47,7 @@ body {
       
       background-repeat: repeat;
   }
-  /*escondemos la informacion personal*/
+  /*escondemos la informacion personal
  .container_marketing{
   display: none;
   }
@@ -74,7 +74,7 @@ body {
       border-radius: 6px;
       border-color: black;
       border-width: 20px;
-      /**/
+      
 
       
       
@@ -92,7 +92,7 @@ body {
       
       background-repeat: repeat;
   }
-  /*escondemos la informacion personal*/
+  /*escondemos la informacion personal
  .container_marketing{
   display: none;
   }
@@ -116,15 +116,15 @@ body {
   	  position: relative;
       
      /*cursor: default;*/
-   	  /*transform: scale(1,0.8);*/
+   	  /*transform: scale(1,0.8);
    	  width: 720px;
    	  height: 1280px;
       border-radius: 6px;
       border-color: black;
       border-width: 10px;
-      /**/
+      
 
       
       
     }
- 
+ */
